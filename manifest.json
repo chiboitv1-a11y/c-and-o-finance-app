@@ -1,0 +1,13 @@
+{
+  "name": "C&O Finance Co",
+  "short_name": "C&O Finance",
+  "description": "Digital Finance & Payment Solutions",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#0a1f3d",
+  "theme_color": "#3fa9f5",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
