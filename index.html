@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>C&O Finance Co</title>
+
+<style>
+/* General */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #0a1f3d;
+  color: #e0e0e0;
+}
+
+/* Header */
+header {
+  background: #0f294d;
+  padding: 25px 20px;
+  text-align: center;
+}
+header h1 { margin: 0; font-size: 2.2em; color: #ffffff; }
+header p { margin: 5px 0 0 0; color: #a0c4ff; font-weight: 500; }
+
+/* Hero / Featured Post */
+.hero {
+  position: relative;
+  width: 100%;
+  max-height: 400px;
+  overflow: hidden;
+  border-radius: 12px;
+  margin: 30px 0;
+}
+.hero img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(60%);
+}
+.hero-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: #ffffff;
+  max-width: 90%;
+}
+.hero-content h2 { font-size: 2.2em; margin-bottom: 15px; }
+.hero-content p { font-size: 1.1em; line-height: 1.5; }
+.hero-content .btn {
+  background: #3fa9f5;
+  color: #ffffff;
+  padding: 14px 28px;
+  border-radius: 8px;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-block;
+  margin-top: 15px;
+}
+.hero-content .btn:hover { background: #1c7ed6; transform: translateY(-2px); transition: 0.2s; }
+
+/* Section */
+section { padding: 40px 20px; max-width: 900px; margin: auto; }
+
+/* Other Posts */
+.post {
+  background: #1e2a3b;
+  padding: 22px;
+  border-radius: 12px;
+  margin-bottom: 25px;
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+}
+.post:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+.post img {
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+.post-content { flex: 1; }
+.post h3 { margin-top: 0; color: #ffffff; }
+.post p { line-height: 1.6; }
+.post small { color: #94a3b8; }
+
+/* Buttons */
+.btn {
+  background: #3fa9f5;
+  color: #ffffff;
+  padding: 12px 22px;
+  text-decoration: none;
+  border-radius: 8px;
+  display: inline-block;
+  margin-top: 12px;
+  font-weight: 600;
+  transition: background 0.2s, transform 0.2s;
+}
+.btn:hover { background: #1c7ed6; transform: translateY(-2px); }
+
+footer { background: #0f294d; padding: 20px; text-align: center; font-size: 14px; color: #a0c4ff; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>C&O Finance Co</h1>
+  <p>Digital Finance & Payment Solutions</p>
+</header>
+
+<section id="posts">
+  <!-- Featured hero and other posts load here -->
+</section>
+
+<footer>
+  © 2026 C&O Finance Co. All rights reserved.
+</footer>
+
+<script>
+const sheetId = '1VVdLsUFzXXVXVZpcWxDTd7JEL1i4oozji4MtRp4Jp_4';
+
+// Convert date strings to timestamps for sorting
+function parseDate(dateStr) {
+  // Accept format DD-MM-YYYY or YYYY-MM-DD
+  const parts = dateStr.split("-");
+  if(parts.length === 3){
+    return new Date(parts[2], parts[1]-1, parts[0]).getTime();
+  }
+  return new Date(dateStr).getTime();
+}
+
+async function loadPosts() {
+  const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json`;
+  const res = await fetch(url);
+  let text = await res.text();
+  text = text.substring(47, text.length - 2);
+  const data = JSON.parse(text);
+  const rows = data.table.rows.map(r => ({
+    date: r.c[0]?.v || '',
+    title: r.c[1]?.v || '',
+    content: r.c[2]?.v || '',
+    btnText: r.c[3]?.v || '',
+    btnUrl: r.c[4]?.v || '#',
+    imgUrl: r.c[5]?.v || ''
+  }));
+
+  // Sort posts by date descending (newest first)
+  rows.sort((a,b) => parseDate(b.date) - parseDate(a.date));
+
+  const container = document.getElementById('posts');
+
+  rows.forEach((post, index) => {
+    if(index === 0){
+      // Hero post
+      const html = `
+        <div class="hero">
+          ${post.imgUrl ? `<img src="${post.imgUrl}" alt="${post.title}">` : ''}
+          <div class="hero-content">
+            <h2>${post.title}</h2>
+            <p>${post.content}</p>
+            ${post.btnText ? `<a class="btn" href="${post.btnUrl}" target="_blank">${post.btnText}</a>` : ''}
+          </div>
+        </div>
+      `;
+      container.innerHTML += html;
+    } else {
+      // Normal posts
+      const html = `
+        <div class="post">
+          ${post.imgUrl ? `<img src="${post.imgUrl}" alt="${post.title}">` : ''}
+          <div class="post-content">
+            <h3>${post.title}</h3>
+            <p>${post.content}</p>
+            <small>${post.date}</small><br/>
+            ${post.btnText ? `<a class="btn" href="${post.btnUrl}" target="_blank">${post.btnText}</a>` : ''}
+          </div>
+        </div>
+      `;
+      container.innerHTML += html;
+    }
+  });
+}
+
+loadPosts();
+</script>
+
+</body>
+</html>
