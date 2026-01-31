@@ -3,108 +3,106 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
 <title>C&O Finance Co</title>
 
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0a1f3d">
+<link rel="apple-touch-icon" href="icon-192.png">
+
 <style>
-/* General */
-body {
-  margin: 0;
-  font-family: 'Segoe UI', Arial, sans-serif;
-  background: #0a1f3d;
-  color: #e0e0e0;
+body{
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:#0a1f3d;
+  color:#e5e7eb;
 }
 
-/* Header */
-header {
-  background: #0f294d;
-  padding: 25px 20px;
-  text-align: center;
+header{
+  background:#020617;
+  padding:25px 15px;
+  text-align:center;
 }
-header h1 { margin: 0; font-size: 2.2em; color: #ffffff; }
-header p { margin: 5px 0 0 0; color: #a0c4ff; font-weight: 500; }
 
-/* Hero / Featured Post */
-.hero {
-  position: relative;
-  width: 100%;
-  max-height: 400px;
-  overflow: hidden;
-  border-radius: 12px;
-  margin: 30px 0;
+header h1{
+  margin:0;
+  color:#ffffff;
 }
-.hero img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  filter: brightness(60%);
-}
-.hero-content {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-  color: #ffffff;
-  max-width: 90%;
-}
-.hero-content h2 { font-size: 2.2em; margin-bottom: 15px; }
-.hero-content p { font-size: 1.1em; line-height: 1.5; }
-.hero-content .btn {
-  background: #3fa9f5;
-  color: #ffffff;
-  padding: 14px 28px;
-  border-radius: 8px;
-  font-weight: 600;
-  text-decoration: none;
-  display: inline-block;
-  margin-top: 15px;
-}
-.hero-content .btn:hover { background: #1c7ed6; transform: translateY(-2px); transition: 0.2s; }
 
-/* Section */
-section { padding: 40px 20px; max-width: 900px; margin: auto; }
-
-/* Other Posts */
-.post {
-  background: #1e2a3b;
-  padding: 22px;
-  border-radius: 12px;
-  margin-bottom: 25px;
-  transition: transform 0.2s, box-shadow 0.2s;
-  display: flex;
-  align-items: flex-start;
-  gap: 15px;
+header p{
+  color:#93c5fd;
 }
-.post:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
-.post img {
-  width: 80px;
-  height: 80px;
-  border-radius: 8px;
-  object-fit: cover;
-  flex-shrink: 0;
-}
-.post-content { flex: 1; }
-.post h3 { margin-top: 0; color: #ffffff; }
-.post p { line-height: 1.6; }
-.post small { color: #94a3b8; }
 
-/* Buttons */
-.btn {
-  background: #3fa9f5;
-  color: #ffffff;
-  padding: 12px 22px;
-  text-decoration: none;
-  border-radius: 8px;
-  display: inline-block;
-  margin-top: 12px;
-  font-weight: 600;
-  transition: background 0.2s, transform 0.2s;
+section{
+  padding:40px 20px;
+  max-width:1000px;
+  margin:auto;
 }
-.btn:hover { background: #1c7ed6; transform: translateY(-2px); }
 
-footer { background: #0f294d; padding: 20px; text-align: center; font-size: 14px; color: #a0c4ff; }
+.hero{
+  background:#020617;
+  border-radius:14px;
+  padding:20px;
+  margin-bottom:35px;
+}
+
+.hero img{
+  width:100%;
+  border-radius:12px;
+  margin-bottom:15px;
+}
+
+.posts{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:20px;
+}
+
+.post{
+  background:#020617;
+  padding:15px;
+  border-radius:12px;
+}
+
+.post img{
+  width:100%;
+  border-radius:10px;
+  margin-bottom:10px;
+}
+
+.post h3{
+  margin:8px 0;
+  color:#ffffff;
+}
+
+.post p{
+  font-size:14px;
+  color:#cbd5f5;
+}
+
+.post a{
+  display:inline-block;
+  margin-top:10px;
+  padding:10px 16px;
+  background:#38bdf8;
+  color:#020617;
+  text-decoration:none;
+  border-radius:8px;
+  font-weight:bold;
+  font-size:14px;
+}
+
+footer{
+  background:#020617;
+  text-align:center;
+  padding:20px;
+  font-size:14px;
+  color:#9ca3af;
+}
 </style>
 </head>
+
 <body>
 
 <header>
@@ -112,8 +110,18 @@ footer { background: #0f294d; padding: 20px; text-align: center; font-size: 14px
   <p>Digital Finance & Payment Solutions</p>
 </header>
 
-<section id="posts">
-  <!-- Featured hero and other posts load here -->
+<section>
+
+  <!-- HERO -->
+  <div class="hero" id="hero">
+    <h2>Latest Update</h2>
+    <p>Loading...</p>
+  </div>
+
+  <!-- POSTS -->
+  <h2>Updates</h2>
+  <div class="posts" id="posts"></div>
+
 </section>
 
 <footer>
@@ -121,71 +129,59 @@ footer { background: #0f294d; padding: 20px; text-align: center; font-size: 14px
 </footer>
 
 <script>
-const sheetId = '1VVdLsUFzXXVXVZpcWxDTd7JEL1i4oozji4MtRp4Jp_4';
+// ✅ CONNECTED GOOGLE SHEET
+const sheetURL =
+"https://spreadsheets.google.com/feeds/list/1VVdLsUFzXXVXVZpcWxDTd7JEL1i4oozji4MtRp4Jp_4/od6/public/values?alt=json";
 
-// Convert date strings to timestamps for sorting
-function parseDate(dateStr) {
-  // Accept format DD-MM-YYYY or YYYY-MM-DD
-  const parts = dateStr.split("-");
-  if(parts.length === 3){
-    return new Date(parts[2], parts[1]-1, parts[0]).getTime();
-  }
-  return new Date(dateStr).getTime();
-}
+fetch(sheetURL)
+.then(res => res.json())
+.then(data => {
+  const rows = data.feed.entry;
 
-async function loadPosts() {
-  const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json`;
-  const res = await fetch(url);
-  let text = await res.text();
-  text = text.substring(47, text.length - 2);
-  const data = JSON.parse(text);
-  const rows = data.table.rows.map(r => ({
-    date: r.c[0]?.v || '',
-    title: r.c[1]?.v || '',
-    content: r.c[2]?.v || '',
-    btnText: r.c[3]?.v || '',
-    btnUrl: r.c[4]?.v || '#',
-    imgUrl: r.c[5]?.v || ''
-  }));
+  // HERO (LATEST POST)
+  const latest = rows[0];
+  document.getElementById("hero").innerHTML = `
+    <img src="${latest.gsx$imageurl.$t}">
+    <h2>${latest.gsx$title.$t}</h2>
+    <p>${latest.gsx$content.$t}</p>
+    <a href="${latest.gsx$buttonurl.$t}" target="_blank">Read more</a>
+    <p style="font-size:13px;color:#9ca3af;margin-top:10px;">
+      ${latest.gsx$date.$t}
+    </p>
+  `;
 
-  // Sort posts by date descending (newest first)
-  rows.sort((a,b) => parseDate(b.date) - parseDate(a.date));
+  // OTHER POSTS
+  let postsHTML = "";
+  rows.slice(1).forEach(post => {
+    postsHTML += `
+      <div class="post">
+        <img src="${post.gsx$imageurl.$t}">
+        <h3>${post.gsx$title.$t}</h3>
+        <p>${post.gsx$content.$t}</p>
+        <a href="${post.gsx$buttonurl.$t}" target="_blank">Read more</a>
+        <p style="font-size:12px;color:#9ca3af;margin-top:8px;">
+          ${post.gsx$date.$t}
+        </p>
+      </div>
+    `;
+  });
 
-  const container = document.getElementById('posts');
+  document.getElementById("posts").innerHTML = postsHTML;
+})
+.catch(err => {
+  document.getElementById("hero").innerHTML =
+    "<p>Failed to load updates.</p>";
+  console.error(err);
+});
+</script>
 
-  rows.forEach((post, index) => {
-    if(index === 0){
-      // Hero post
-      const html = `
-        <div class="hero">
-          ${post.imgUrl ? `<img src="${post.imgUrl}" alt="${post.title}">` : ''}
-          <div class="hero-content">
-            <h2>${post.title}</h2>
-            <p>${post.content}</p>
-            ${post.btnText ? `<a class="btn" href="${post.btnUrl}" target="_blank">${post.btnText}</a>` : ''}
-          </div>
-        </div>
-      `;
-      container.innerHTML += html;
-    } else {
-      // Normal posts
-      const html = `
-        <div class="post">
-          ${post.imgUrl ? `<img src="${post.imgUrl}" alt="${post.title}">` : ''}
-          <div class="post-content">
-            <h3>${post.title}</h3>
-            <p>${post.content}</p>
-            <small>${post.date}</small><br/>
-            ${post.btnText ? `<a class="btn" href="${post.btnUrl}" target="_blank">${post.btnText}</a>` : ''}
-          </div>
-        </div>
-      `;
-      container.innerHTML += html;
-    }
+<!-- SERVICE WORKER -->
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/service-worker.js');
   });
 }
-
-loadPosts();
 </script>
 
 </body>
