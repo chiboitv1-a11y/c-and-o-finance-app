@@ -4,89 +4,112 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>C&O Finance Co</title>
-
-<!-- PWA manifest (if you have one) -->
-<link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0a1f3d">
 
 <style>
 body {
-  margin: 0;
+  margin:0;
   font-family: Arial, sans-serif;
-  background: #0a1f3d;
-  color: #e0e0e0;
+  background:#0a1f3d;
+  color:#e5e7eb;
 }
+
+/* Header */
 header {
-  background: #0f294d;
-  padding: 25px;
-  text-align: center;
+  background:#0f294d;
+  padding:30px 20px;
+  text-align:center;
 }
-header h1 {
-  margin: 0;
-  color: #ffffff;
-}
-header p {
-  color: #a0c4ff;
-}
+header h1 { margin:0; font-size:2.2em; color:#ffffff; }
+header p { margin-top:6px; color:#a0c4ff; }
+
+/* Posts Section */
 section {
-  padding: 40px 20px;
-  max-width: 900px;
-  margin: auto;
+  max-width:900px;
+  margin:auto;
+  padding:40px 20px;
+  display:flex;
+  flex-direction: column;
+  gap:25px;
 }
+
+/* Hero Post */
 .hero {
-  background: #1e2a3b;
-  border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 30px;
+  position: relative;
+  border-radius:12px;
+  overflow: hidden;
+  max-height:400px;
+  background:#1e2a3b;
+  color:#fff;
 }
 .hero img {
-  width: 100%;
-  border-radius: 10px;
-  margin-bottom: 12px;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  filter: brightness(60%);
 }
-.hero-content h2 {
-  margin: 10px 0;
-  font-size: 1.8em;
+.hero-content {
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%, -50%);
+  text-align:center;
+  padding:0 20px;
 }
-.posts {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 18px;
+.hero-content h2 { font-size:2em; margin-bottom:12px; }
+.hero-content p { font-size:1.1em; line-height:1.4; }
+.hero-content .btn {
+  display:inline-block;
+  margin-top:12px;
+  padding:12px 24px;
+  background:#3fa9f5;
+  color:#020617;
+  text-decoration:none;
+  border-radius:8px;
+  font-weight:600;
 }
+.hero-content .btn:hover { background:#1c7ed6; }
+
+/* Normal Posts */
 .post {
-  background: #1e2a3b;
-  padding: 18px;
-  border-radius: 12px;
+  background:#1e2a3b;
+  padding:22px;
+  border-radius:12px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.post:hover {
+  transform:translateY(-2px);
+  box-shadow:0 5px 15px rgba(0,0,0,0.3);
 }
 .post img {
-  width: 100%;
-  border-radius: 10px;
-  margin-bottom: 8px;
+  width:100%;
+  border-radius:10px;
+  margin-bottom:12px;
 }
-.post h3 {
-  margin-top: 0;
-  color: #fff;
+.post h3 { margin-top:0; color:#ffffff; }
+.post p { line-height:1.6; color:#dbeafe; }
+.post small { color:#94a3b8; }
+
+/* Button */
+.btn {
+  display:inline-block;
+  margin-top:12px;
+  padding:12px 22px;
+  background:#3fa9f5;
+  color:#020617;
+  text-decoration:none;
+  border-radius:8px;
+  font-weight:600;
 }
-.post p {
-  font-size: 14px;
-  color: #cbd5f5;
-}
-.post .btn {
-  display: inline-block;
-  margin-top: 10px;
-  padding: 10px 16px;
-  background: #3fa9f5;
-  color: #020617;
-  text-decoration: none;
-  border-radius: 6px;
-  font-weight: bold;
-}
+.btn:hover { background:#1c7ed6; }
+
+/* Footer */
 footer {
-  background: #0f294d;
-  padding: 18px;
-  text-align: center;
-  font-size: 14px;
-  color: #9ca3af;
+  background:#0f294d;
+  padding:18px;
+  text-align:center;
+  font-size:14px;
+  color:#a0c4ff;
 }
 </style>
 </head>
@@ -99,7 +122,7 @@ footer {
 </header>
 
 <section id="posts">
-  <!-- Hero & posts will load here -->
+  Loading posts...
 </section>
 
 <footer>
@@ -107,50 +130,61 @@ footer {
 </footer>
 
 <script>
-// 📌 Your Google Sheet JSON URL
-const sheetURL = 
-"https://spreadsheets.google.com/feeds/list/1j0FXZnY5pprCbhkfpPx9C34Zb5VgZa9ICFRwrvs4OOQ/od6/public/values?alt=json";
+const sheetURL =
+"https://docs.google.com/spreadsheets/d/1j0FXZnY5pprCbhkfpPx9C34Zb5VgZa9ICFRwrvs4OOQ/gviz/tq?tqx=out:json";
 
 fetch(sheetURL)
-.then(res => res.json())
-.then(data => {
-  const rows = data.feed.entry;
+  .then(res => res.text())
+  .then(text => {
+    const json = JSON.parse(text.substring(47, text.length - 2));
+    const rows = json.table.rows;
 
-  // Build hero with newest post (first row)
-  if (rows.length > 0) {
-    const first = rows[0];
-    const heroHtml = `
-      <div class="hero">
-        ${ first.gsx$imageurl?.$t ? `<img src="${first.gsx$imageurl.$t}" alt="${first.gsx$title.$t}">` : '' }
-        <div class="hero-content">
-          <h2>${first.gsx$title.$t}</h2>
-          <p>${first.gsx$content.$t}</p>
-          ${ first.gsx$buttonurl?.$t ? `<a class="btn" href="${first.gsx$buttonurl.$t}" target="_blank">${first.gsx$button.$t || 'Learn More'}</a>` : '' }
-        </div>
-      </div>
-    `;
-    document.getElementById("posts").innerHTML += heroHtml;
-  }
+    const container = document.getElementById("posts");
+    container.innerHTML = "";
 
-  // Build normal posts
-  let postsHTML = "";
-  rows.slice(1).forEach(post => {
-    postsHTML += `
-      <div class="post">
-        ${ post.gsx$imageurl?.$t ? `<img src="${post.gsx$imageurl.$t}" alt="${post.gsx$title.$t}">` : '' }
-        <h3>${post.gsx$title.$t}</h3>
-        <p>${post.gsx$content.$t}</p>
-        ${ post.gsx$buttonurl?.$t ? `<a class="btn" href="${post.gsx$buttonurl.$t}" target="_blank">${post.gsx$button.$t || 'Read More'}</a>` : '' }
-      </div>
-    `;
+    if (!rows || rows.length === 0) {
+      container.innerHTML = "No posts available yet.";
+      return;
+    }
+
+    rows.forEach((r, index) => {
+      const title = r.c[0]?.v || '';
+      const content = r.c[1]?.v || '';
+      const button = r.c[2]?.v || '';
+      const buttonUrl = r.c[3]?.v || '';
+      const image = r.c[4]?.v || '';
+      const date = r.c[5]?.f || '';
+
+      if(index === 0){
+        // Featured Hero Post
+        container.innerHTML += `
+          <div class="hero">
+            ${image ? `<img src="${image}" alt="${title}">` : ''}
+            <div class="hero-content">
+              <h2>${title}</h2>
+              <p>${content}</p>
+              ${button && buttonUrl ? `<a class="btn" href="${buttonUrl}" target="_blank">${button}</a>` : ''}
+            </div>
+          </div>
+        `;
+      } else {
+        // Normal posts
+        container.innerHTML += `
+          <div class="post">
+            ${image ? `<img src="${image}" alt="${title}">` : ''}
+            <h3>${title}</h3>
+            <p>${content}</p>
+            <small>${date}</small><br>
+            ${button && buttonUrl ? `<a class="btn" href="${buttonUrl}" target="_blank">${button}</a>` : ''}
+          </div>
+        `;
+      }
+    });
+  })
+  .catch(err => {
+    document.getElementById('posts').innerText = 'Failed to load posts';
+    console.error(err);
   });
-
-  document.getElementById("posts").innerHTML += postsHTML;
-})
-.catch(err => {
-  document.getElementById("posts").innerHTML = "<p>Failed to load posts.</p>";
-  console.error(err);
-});
 </script>
 
 </body>
